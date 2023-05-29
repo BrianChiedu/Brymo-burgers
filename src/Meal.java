@@ -18,34 +18,23 @@ public class Meal {
     }
 
     public double getTotalPrice(){
-        if(burger instanceof DeluxeBurger){
-            return burger.getAdjustedPrice();
-        }
         return side.getAdjustedPrice() + drink.getAdjustedPrice() + burger.getAdjustedPrice();
     }
 
     public void printItemizedList(){
         burger.printItem();
-        if(burger instanceof DeluxeBurger){
-            Item.printItem(drink.getName(), 0);
-            Item.printItem(side.getName(),0);
-        }else {
-            drink.printItem();
-            side.printItem();
-        }
+        drink.printItem();
+        side.printItem();
+
         System.out.println("-".repeat(30));
         Item.printItem("TOTAL PRICE", getTotalPrice());
     }
 
-    public void  addBurgerToppings(String extra1, String extra2, String extra3){
-        burger.addToppings(extra1, extra2, extra3);
-    }
-
-    public void  addBurgerToppings(String extra1, String extra2, String extra3, String extra4, String extra5){
+    public void addBurgerToppings(String... extras){
         if(burger instanceof DeluxeBurger db){
-            db.addToppings(extra1, extra2, extra3, extra4, extra5);
+            db.addToppings(extras);
         } else {
-            burger.addToppings(extra1, extra2, extra3);
+            burger.addToppings(extras);
         }
     }
 

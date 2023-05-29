@@ -1,10 +1,11 @@
+import java.util.ArrayList;
+
 public class Burger extends Item {
-    private Item extra1;
-    private Item extra2;
-    private Item extra3;
+    private ArrayList<Item> addOns;
 
     public Burger(String name, double price) {
         super("Burger", name, price);
+        this.addOns = new ArrayList<>();
     }
 
     @Override
@@ -14,33 +15,28 @@ public class Burger extends Item {
 
     @Override
     public double getAdjustedPrice() {
-        return getBasePrice() + ((extra1 == null) ? 0 : extra1.getAdjustedPrice()) + ((extra2 == null) ? 0 : extra2.getAdjustedPrice()) + ((extra3 == null) ? 0 : extra3.getAdjustedPrice());
+        //Calculating the total adjustedPrice for extras
+        double totalExtraPrice = 0;
+        for (Item extra:addOns) {
+            totalExtraPrice += extra.getAdjustedPrice();
+        }
+        return getBasePrice()  + totalExtraPrice;
     }
 
     public double getExtraPrice(String toppingName) {
-        return switch (toppingName.toUpperCase()) {
-            case "AVOCADO", "CHEESE" -> 1.0;
-            case "BACON", "HAM", "SALAMI" -> 1.5;
-            default -> 0.0;
-        };
+        return Toppings.valueOf(toppingName.toUpperCase()).getPrice();
     }
 
-    public void addToppings(String extra1, String extra2, String extra3) {
-        this.extra1 = new Item("TOPPING", extra1, getExtraPrice(extra1));
-        this.extra2 = new Item("TOPPING", extra2, getExtraPrice(extra2));
-        this.extra3 = new Item("TOPPING", extra3, getExtraPrice(extra3));
+    public void addToppings(String... extras) {
+        for (String extra:extras) {
+            addOns.add(new Item("TOPPING", extra, getExtraPrice(extra)));
+        }
     }
 
     public void printItemizedList() {
         printItem("BASE BURGER", getBasePrice());
-        if (extra1 != null) {
-            extra1.printItem();
-        }
-        if (extra2 != null) {
-            extra2.printItem();
-        }
-        if (extra3 != null) {
-            extra3.printItem();
+        for (Item extra:addOns) {
+            extra.printItem();
         }
     }
 
